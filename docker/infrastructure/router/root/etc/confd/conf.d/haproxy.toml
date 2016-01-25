@@ -1,0 +1,7 @@
+[template]
+src = "haproxy.cfg.tmpl"
+dest = "/usr/local/etc/haproxy/haproxy.cfg"
+keys = [
+    "/services/router/backend/",
+]
+reload_cmd = "sv reload haproxy"

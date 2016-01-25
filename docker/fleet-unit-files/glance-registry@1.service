@@ -1,0 +1,14 @@
+Description=Component glance-registry of service glance
+
+[Service]
+TimeoutStartSec=20m
+EnvironmentFile=/etc/environment
+ExecStartPre=-/bin/sh -c "/usr/bin/docker stop glance-registry%i"
+ExecStartPre=-/bin/sh -c "/usr/bin/docker rm glance-registry%i"
+ExecStartPre=-/bin/sh -c "IMAGE=$(etcdctl get /services/glance/config/glance-registry-image-name) && flock -w 1800 /run/docker-pull.lock /usr/bin/docker pull $IMAGE"
+ExecStart=/bin/sh -c "IMAGE=$(etcdctl get /services/glance/config/glance-registry-image-name) && exec /usr/bin/docker run --rm --name glance-registry%i -e CONFD_OPTS='-interval 10 -node 172.17.42.1:4001' -e SERVICE_9191_NAME=services/router/backend/glance/registry -p 9191 $IMAGE"
+ExecStop=/bin/sh -c "/usr/bin/docker stop glance-registry%i"
+
+Restart=on-failure
+RestartSec=5
+

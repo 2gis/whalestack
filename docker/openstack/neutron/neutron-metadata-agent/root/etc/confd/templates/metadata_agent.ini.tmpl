@@ -1,0 +1,26 @@
+[DEFAULT]
+verbose = True
+debug = {{ getv "/services/neutron/config/debug"  }}
+
+# The Neutron user information for accessing the Neutron API.
+auth_url = {{ getv "/services/router/frontend/neutron/server" }}
+auth_region = RegionOne
+endpoint_type = adminURL
+
+# TCP Port used by Nova metadata server
+{{ $url := split (getv "/services/router/frontend/nova-api-metadata/url") ":"  }}
+nova_metadata_ip = {{ index $url 0 }}
+nova_metadata_port = {{ index $url 1 }}
+
+# Admin authentication
+admin_tenant_name = {{ getv "/services/neutron/config/keystone-tenant" }}
+admin_user = {{ getv "/services/neutron/config/keystone-user" }}
+admin_password = {{ getv "/services/neutron/config/keystone-password" }}
+
+# Number of backlog requests to configure the metadata server socket with
+metadata_proxy_shared_secret = {{ getv "/services/neutron/config/metadata-secret" }}
+metadata_workers = 10
+metadata_backlog = 128
+
+# Metadata Caching
+cache_url = memory://?default_ttl=5

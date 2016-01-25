@@ -1,0 +1,16 @@
+Description=Component registrator of service registrator
+
+[Service]
+TimeoutStartSec=20m
+EnvironmentFile=/etc/environment
+ExecStartPre=-/bin/sh -c "/usr/bin/docker stop registrator"
+ExecStartPre=-/bin/sh -c "/usr/bin/docker rm registrator"
+ExecStartPre=-/bin/sh -c "IMAGE=$(etcdctl get /services/registrator/config/registrator-image-name) && flock -w 1800 /run/docker-pull.lock /usr/bin/docker pull $IMAGE"
+ExecStart=/bin/sh -c "IMAGE=$(etcdctl get /services/registrator/config/registrator-image-name) && exec /usr/bin/docker run --rm --name registrator -v /var/run/docker.sock:/tmp/docker.sock $IMAGE -ip $COREOS_PUBLIC_IPV4 -ttl 10 -ttl-refresh 5 etcd://172.17.42.1:4001 -resync 30"
+ExecStop=/bin/sh -c "/usr/bin/docker stop registrator"
+
+Restart=on-failure
+RestartSec=5
+
+[X-Fleet]
+Global=True

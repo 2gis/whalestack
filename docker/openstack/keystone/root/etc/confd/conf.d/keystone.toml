@@ -1,0 +1,11 @@
+[template]
+src = "keystone.conf.tmpl"
+dest = "/etc/keystone/keystone.conf"
+keys = [
+    "/services/keystone/config/",
+    "/services/rabbitmq/hosts",
+    "/services/rabbitmq/config/userid",
+    "/services/rabbitmq/config/password",
+    "/services/balancer/host",
+]
+reload_cmd="sv restart apache2"

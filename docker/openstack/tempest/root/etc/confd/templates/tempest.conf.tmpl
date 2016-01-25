@@ -1,0 +1,229 @@
+[DEFAULT]
+
+debug = {{ getv "/services/tempest/config/debug" }}
+verbose = {{ getv "/services/tempest/config/verbose" }}
+
+log_file = /dev/stdout
+use_stderr = false
+
+resources_prefix = tempest
+
+
+[auth]
+
+use_dynamic_credentials = true
+
+tempest_roles = remote_image
+
+#create_isolated_networks = true
+
+admin_username = admin
+admin_tenant_name = admin
+admin_password = {{ getv "/services/keystone/config/admin-password" }}
+admin_domain_name = Default
+
+
+[baremetal]
+
+
+[boto]
+
+
+[compute]
+
+image_ref = b290b37b-76ee-44f4-89ca-b95d85f4f618
+
+flavor_ref = 201
+flavor_ref_alt = 202
+
+image_ssh_user = cirros
+image_ssh_password = cubswin:)
+
+build_interval = 1
+build_timeout = 300
+
+ssh_auth_method = configured
+ssh_connect_method = floating
+ssh_user = cirros
+
+fixed_network_name = tempest-private
+network_for_ssh = tempest-private
+endpoint_type = internalURL
+
+floating_ip_range = 10.0.0.0/29
+
+
+[compute-feature-enabled]
+
+change_password = false
+console_output = true
+resize = true
+pause = false
+shelve = false
+suspend = false
+
+live_migration = false
+block_migration_for_live_migration = false
+block_migrate_cinder_iscsi = false
+
+spice_console = true
+
+rescue = false
+
+enable_instance_password = true
+
+interface_attach = false
+
+snapshot = true
+
+
+[dashboard]
+
+dashboard_url = http://{{ getv "/services/balancer/host" }}
+login_url = http://{{ getv "/services/balancer/host" }}/auth/login/
+
+
+[data-processing]
+
+
+[database]
+
+
+[debug]
+
+
+[identity]
+
+disable_ssl_certificate_validation = false
+
+uri = http://{{ getv "/services/router/frontend/keystone/public-url" }}/v2.0
+uri_v3 = http://{{ getv "/services/router/frontend/keystone/public-url" }}/v3
+auth_version = v3
+
+v2_public_endpoint_type = internalURL
+
+username = demo
+password = qweqwe
+tenant_name = demo
+
+admin_role = admin
+domain_name = Default
+
+
+[identity-feature-enabled]
+
+trust = false
+
+
+[image]
+
+endpoint_type = internalURL
+http_image = http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
+
+build_timeout = 300
+build_interval = 1
+
+
+[image-feature-enabled]
+
+api_v2 = true
+api_v1 = true
+
+
+[input-scenario]
+
+
+[messaging]
+
+
+[negative]
+
+
+[network]
+
+endpoint_type = internalURL
+
+tenant_network_cidr = 192.168.74.0/24
+tenant_network_mask_bits = 24
+tenant_networks_reachable = false
+
+#public_network_id =
+default_network = 10.0.0.0/24
+
+floating_network_name = tempest-public
+
+
+[network-feature-enabled]
+
+ipv6 = false
+
+api_extensions = agent,allowed-address-pairs,binding,dhcp_agent_scheduler,ext-gw-mode,external-net,extra_dhcp_opt,extra_dhcp_optagent,extraroute,l3_agent_scheduler,metering,provider,quotas,router,security-group,service-type
+
+
+[object-storage]
+
+
+[orchestration]
+
+endpoint_type = internalURL
+instance_type = tempest1
+
+
+[oslo_concurrency]
+
+lock_path = /var/lock/
+
+
+[scenario]
+
+img_dir = /opt/images
+img_file = cirros-0.3.4-x86_64-disk.img
+ami_img_file = cirros-0.3.4-x86_64-blank.img
+ari_img_file = cirros-0.3.4-x86_64-initrd
+aki_img_file = cirros-0.3.4-x86_64-vmlinuz
+ssh_user = cirros
+
+
+[service_available]
+
+cinder = true
+neutron = true
+glance = true
+swift = false
+nova = true
+heat = false
+ceilometer = false
+horizon = true
+sahara = false
+ironic = false
+trove = false
+zaqar = false
+
+
+[stress]
+
+
+[telemetry]
+
+endpoint_type = internalURL
+
+
+[validation]
+
+run_validation = true
+
+
+[volume]
+
+build_interval = 1
+build_timeout = 300
+endpoint_type = internalURL
+backend1_name = backend1
+backend2_name = backend2
+
+
+[volume-feature-enabled]
+
+multi_backend = false
+backup = false
+snapshot = false

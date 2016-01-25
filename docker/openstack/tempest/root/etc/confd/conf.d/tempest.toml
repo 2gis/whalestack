@@ -1,0 +1,9 @@
+[template]
+src = "tempest.conf.tmpl"
+dest = "/etc/tempest/tempest.conf"
+keys = [
+    "/services/router/frontend/keystone/public-url",
+    "/services/tempest/config/",
+    "/services/keystone/config/admin-password",
+    "/services/balancer/host",
+]

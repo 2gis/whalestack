@@ -1,0 +1,38 @@
+[DEFAULT]
+verbose = {{ getv "/services/designate/config/verbose" }}
+debug = {{ getv "/services/designate/config/debug" }}
+
+[oslo_messaging_rabbit]
+{{ $rabbit_hosts := getvs "/services/rabbitmq/hosts/*" }}
+rabbit_hosts = {{ join $rabbit_hosts "," }}
+rabbit_userid = {{ getv "/services/rabbitmq/config/userid" }}
+rabbit_password = {{ getv "/services/rabbitmq/config/password" }}
+rabbit_port = {{ getv "/services/rabbitmq/config/port" }}
+
+[service:central]
+backend_driver = powerdns
+max_domain_name_len = 255
+max_record_name_len = 255
+default_pool_id = 794ccc2c-d751-44fe-b57f-8894c9f5c842
+
+[storage:sqlalchemy]
+connection = {{ getv "/services/designate/config/db-connection" }}
+idle_timeout = 3600
+max_retries = 10
+retry_interval = 10
+
+[backend:powerdns]
+connection = {{ getv "/services/designate/config/backend-db-connection" }}
+idle_timeout = 3600
+max_retries = 10
+retry_interval = 10
+
+[service:pool_manager]
+pool_id = 794ccc2c-d751-44fe-b57f-8894c9f5c842
+
+[pool:794ccc2c-d751-44fe-b57f-8894c9f5c842]
+targets = {{ getv "/services/designate/config/pool-target-id" }}
+
+[pool_target:{{ getv "/services/designate/config/pool-target-id" }}]
+type = powerdns
+options = connection: {{ getv "/services/designate/config/backend-db-connection" }}, idle_timeout: 3600, max_retries: 10, retry_interval: 10

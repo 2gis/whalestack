@@ -1,0 +1,14 @@
+[template]
+src = "nova.conf.tmpl"
+dest = "/etc/nova/nova.conf"
+keys = [
+    "/services/rabbitmq/hosts",
+    "/services/rabbitmq/config/",
+    "/services/nova/config/",
+    "/services/ceph/config/",
+    "/services/neutron/config/",
+    "/services/router/frontend/",
+    "/services/balancer/host"
+]
+
+reload_cmd="sv restart nova-api-metadata"

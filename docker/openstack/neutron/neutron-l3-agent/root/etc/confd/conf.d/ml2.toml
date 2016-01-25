@@ -1,0 +1,6 @@
+[template]
+src = "ml2.conf.tmpl"
+dest = "/etc/neutron/plugins/ml2/ml2_conf.ini"
+keys = [
+]
+reload_cmd = "sv restart neutron-l3-agent"

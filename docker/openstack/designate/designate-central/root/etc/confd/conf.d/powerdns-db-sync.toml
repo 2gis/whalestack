@@ -1,0 +1,6 @@
+[template]
+src = "powerdns-db-sync.sh.tmpl"
+dest = "/powerdns-db-sync.sh"
+keys = [
+    "/services/designate/config/pool-target-id",
+]

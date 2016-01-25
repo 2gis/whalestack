@@ -1,0 +1,16 @@
+Description=Component horizon of service horizon
+
+[Service]
+TimeoutStartSec=20m
+EnvironmentFile=/etc/environment
+ExecStartPre=-/bin/sh -c "/usr/bin/docker stop horizon"
+ExecStartPre=-/bin/sh -c "/usr/bin/docker rm horizon"
+ExecStartPre=-/bin/sh -c "IMAGE=$(etcdctl get /services/horizon/config/horizon-image-name) && flock -w 1800 /run/docker-pull.lock /usr/bin/docker pull $IMAGE"
+ExecStart=/bin/sh -c "IMAGE=$(etcdctl get /services/horizon/config/horizon-image-name) && exec /usr/bin/docker run --rm --name horizon -e SERVICE_80_NAME=services/router/backend/horizon/http -e SERVICE_443_NAME=services/router/backend/horizon/https -e CONFD_OPTS='-interval 10 -node 172.17.42.1:4001' -p 443 -p 80 $IMAGE"
+ExecStop=/bin/sh -c "/usr/bin/docker stop horizon"
+
+Restart=on-failure
+RestartSec=5
+
+[X-Fleet]
+Global=True

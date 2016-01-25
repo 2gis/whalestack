@@ -1,0 +1,39 @@
+[DEFAULT]
+debug = {{ getv "/services/glance/config/debug" }}
+verbose = {{ getv "/services/glance/config/verbose" }}
+
+log_file = /dev/stdout
+use_syslog = False
+
+bind_host = 0.0.0.0
+bind_port = 9191
+backlog = 4096
+api_limit_max = 1000
+limit_param_default = 25
+notification_driver = messagingv2
+
+rpc_backend = glance.openstack.common.rpc.impl_kombu
+{{ $rabbit_hosts := getvs "/services/rabbitmq/hosts/*" }}
+rabbit_hosts = {{ join $rabbit_hosts "," }}
+rabbit_userid = {{ getv "/services/rabbitmq/config/userid" }}
+rabbit_password = {{ getv "/services/rabbitmq/config/password" }}
+rabbit_port = {{ getv "/services/rabbitmq/config/port" }}
+rabbit_use_ssl = False
+rabbit_virtualhost = /
+rabbit_notification_exchange = glance
+rabbit_notification_topic = notifications
+rabbit_durable_queues = False
+
+[database]
+connection = {{ getv "/services/glance/config/db-connection" }}
+
+[keystone_authtoken]
+signing_dir = /var/lib/glance/cache/registry/
+auth_uri = http://{{ getv "/services/balancer/host" }}:5000/v2.0
+identity_uri = http://{{ getv "/services/balancer/host" }}:35357
+admin_user = {{ getv "/services/glance/config/keystone-user" }}
+admin_tenant_name = {{ getv "/services/glance/config/keystone-tenant" }}
+admin_password = {{ getv "/services/glance/config/keystone-password" }}
+
+[paste_deploy]
+flavor = keystone

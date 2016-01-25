@@ -1,0 +1,8 @@
+[template]
+src = "metadata_agent.ini.tmpl"
+dest = "/etc/neutron/metadata_agent.ini"
+keys = [
+    "/services/router/frontend",
+    "/services/neutron/config"
+]
+reload_cmd="sv restart neutron-metadata-agent"

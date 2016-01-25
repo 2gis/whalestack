@@ -1,0 +1,56 @@
+[DEFAULT]
+debug = {{ getv "/services/glance/config/debug" }}
+verbose = {{ getv "/services/glance/config/verbose" }}
+
+log_file = /dev/stdout
+use_syslog = False
+
+bind_host = 0.0.0.0
+bind_port = 9292
+backlog = 4096
+workers = 4
+{{ $url := split (getv "/services/router/frontend/glance/registry") ":" }}
+registry_host = {{ index $url 0 }}
+registry_port = {{ index $url 1 }}
+registry_client_protocol = http
+cinder_catalog_info = volume:cinder:internalURL
+notification_driver = messagingv2
+
+rpc_backend = glance.openstack.common.rpc.impl_kombu
+{{ $rabbit_hosts := getvs "/services/rabbitmq/hosts/*" }}
+rabbit_hosts = {{ join $rabbit_hosts "," }}
+rabbit_userid = {{ getv "/services/rabbitmq/config/userid" }}
+rabbit_password = {{ getv "/services/rabbitmq/config/password" }}
+rabbit_port = {{ getv "/services/rabbitmq/config/port" }}
+rabbit_use_ssl = False
+rabbit_virtual_host = /
+rabbit_notification_exchange = glance
+rabbit_notification_topic = notifications
+rabbit_default_queues = False
+
+delayed_delete = False
+scrub_time = 43200
+scrubber_datadir = /var/lib/glance/scrubber/
+image_cache_dir = /var/lib/glance/cache/
+show_image_direct_url = True
+default_store = rbd
+
+[database]
+connection = {{ getv "/services/glance/config/db-connection" }}
+
+[keystone_authtoken]
+identity_uri = http://{{ getv "/services/balancer/host" }}:35357
+admin_user = {{ getv "/services/glance/config/keystone-user" }}
+admin_tenant_name = {{ getv "/services/glance/config/keystone-tenant" }}
+admin_password = {{ getv "/services/glance/config/keystone-password" }}
+
+[paste_deploy]
+flavor = keystone
+
+[glance_store]
+default_store = rbd
+stores = glance.store.filesystem.Store,glance.store.http.Store,glance.store.swift.Store,glance.store.cinder.Store,rbd
+rbd_store_pool = openstack-cd-images
+rbd_store_user = glance
+rbd_store_ceph_conf = /etc/ceph/ceph.conf
+rbd_store_chunk_size = 8

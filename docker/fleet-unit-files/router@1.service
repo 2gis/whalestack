@@ -1,0 +1,14 @@
+Description=Component router of service router
+
+[Service]
+TimeoutStartSec=20m
+EnvironmentFile=/etc/environment
+ExecStartPre=-/bin/sh -c "/usr/bin/docker stop router%i"
+ExecStartPre=-/bin/sh -c "/usr/bin/docker rm router%i"
+ExecStartPre=-/bin/sh -c "IMAGE=$(etcdctl get /services/router/config/router-image-name) && flock -w 1800 /run/docker-pull.lock /usr/bin/docker pull $IMAGE"
+ExecStart=/bin/sh -c "IMAGE=$(etcdctl get /services/router/config/router-image-name) && exec /usr/bin/docker run --rm --name router%i -e CONFD_OPTS='-interval 5 -node 172.17.42.1:4001' -e SERVICE_35357_NAME=services/router/frontend/keystone -e SERVICE_35357_ID=admin-url -e SERVICE_5000_NAME=services/router/frontend/keystone -e SERVICE_5000_ID=public-url -e SERVICE_8774_NAME=services/router/frontend/nova-api -e SERVICE_8774_ID=url -e SERVICE_8775_NAME=services/router/frontend/nova-api-metadata -e SERVICE_8775_ID=url -e SERVICE_6082_NAME=services/router/frontend/nova-spiceproxy -e SERVICE_6082_ID=url -e SERVICE_80_NAME=services/router/frontend/horizon -e SERVICE_80_ID=url -e SERVICE_443_NAME=services/router/frontend/horizon -e SERVICE_443_ID=https-url -e SERVICE_8004_NAME=services/router/frontend/heat -e SERVICE_8004_ID=api -e SERVICE_8000_NAME=services/router/frontend/heat -e SERVICE_8000_ID=api-cfn -e SERVICE_9001_NAME=services/router/frontend/designate -e SERVICE_9001_ID=api -e SERVICE_8776_NAME=services/router/frontend/cinder -e SERVICE_8776_ID=api -e SERVICE_9292_NAME=services/router/frontend/glance -e SERVICE_9292_ID=api -e SERVICE_9191_NAME=services/router/frontend/glance -e SERVICE_9191_ID=registry -e SERVICE_9696_NAME=services/router/frontend/neutron -e SERVICE_9696_ID=server -p 8080:8080 -p 35357:35357 -p 5000:5000 -p 8774:8774 -p 8775:8775 -p 6082:6082 -p 80:80 -p 443:443 -p 8004:8004 -p 8000:8000 -p 9001:9001 -p 8776:8776 -p 9292:9292 -p 9191:9191 -p 9696:9696 $IMAGE"
+ExecStop=/bin/sh -c "/usr/bin/docker stop router%i"
+
+Restart=on-failure
+RestartSec=5
+

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+/usr/bin/designate-manage powerdns sync {{ getv "/services/designate/config/pool-target-id" }}

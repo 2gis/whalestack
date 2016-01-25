@@ -1,0 +1,15 @@
+[global]
+fsid = {{ getv "/services/ceph/config/fsid" }}
+mon initial members = {{ getv "/services/ceph/config/mon-addr" }}
+mon host = {{ getv "/services/ceph/config/mon-addr" }}
+auth cluster required = cephx
+auth service required = cephx
+auth client required = cephx
+osd crush chooseleaf type = 0
+osd journal size = 100
+osd pool default pg num = 8
+osd pool default pgp num = 8
+osd pool default size = 1
+public network = {{ getv "/services/ceph/config/public-network" }}
+cluster network = {{ getv "/services/ceph/config/cluster-network" }}
+

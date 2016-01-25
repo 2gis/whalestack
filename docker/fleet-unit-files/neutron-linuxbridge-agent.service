@@ -1,0 +1,16 @@
+Description=Component neutron-linuxbridge-agent of service neutron
+
+[Service]
+TimeoutStartSec=20m
+EnvironmentFile=/etc/environment
+ExecStartPre=-/bin/sh -c "/usr/bin/docker stop neutron-linuxbridge-agent"
+ExecStartPre=-/bin/sh -c "/usr/bin/docker rm neutron-linuxbridge-agent"
+ExecStartPre=-/bin/sh -c "IMAGE=$(etcdctl get /services/neutron/config/neutron-linuxbridge-agent-image-name) && flock -w 1800 /run/docker-pull.lock /usr/bin/docker pull $IMAGE"
+ExecStart=/bin/sh -c "IMAGE=$(etcdctl get /services/neutron/config/neutron-linuxbridge-agent-image-name) && exec /usr/bin/docker run --rm --name neutron-linuxbridge-agent -e CONFD_OPTS='-interval 10 -node 172.17.42.1:4001' --env NEUTRON_FLAT_IF=flat --env NEUTRON_VXLAN_IP=$COREOS_PUBLIC_IPV4 --privileged --net host --cap-add CAP_NET_ADMIN $IMAGE"
+ExecStop=/bin/sh -c "/usr/bin/docker stop neutron-linuxbridge-agent"
+
+Restart=on-failure
+RestartSec=5
+
+[X-Fleet]
+Global=True

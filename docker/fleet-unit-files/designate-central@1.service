@@ -1,0 +1,14 @@
+Description=Component designate-central of service designate
+
+[Service]
+TimeoutStartSec=20m
+EnvironmentFile=/etc/environment
+ExecStartPre=-/bin/sh -c "/usr/bin/docker stop designate-central%i"
+ExecStartPre=-/bin/sh -c "/usr/bin/docker rm designate-central%i"
+ExecStartPre=-/bin/sh -c "IMAGE=$(etcdctl get /services/designate/config/designate-central-image-name) && flock -w 1800 /run/docker-pull.lock /usr/bin/docker pull $IMAGE"
+ExecStart=/bin/sh -c "IMAGE=$(etcdctl get /services/designate/config/designate-central-image-name) && exec /usr/bin/docker run --rm --name designate-central%i -e CONFD_OPTS='-interval 10 -node 172.17.42.1:4001' $IMAGE"
+ExecStop=/bin/sh -c "/usr/bin/docker stop designate-central%i"
+
+Restart=on-failure
+RestartSec=5
+

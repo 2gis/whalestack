@@ -1,0 +1,4 @@
+[template]
+src = "dnsmasq-neutron.conf.tmpl"
+dest = "/etc/neutron/dnsmasq-neutron.conf"
+reload_cmd="service neutron-dhcp-agent restart"

@@ -1,0 +1,8 @@
+[template]
+src = "bootstrap-service.sh.tmpl"
+dest = "/bootstrap-service.sh"
+keys = [
+    "/services/tempest/config/tempest-user",
+    "/services/tempest/config/tempest-tenant",
+    "/services/tempest/config/tempest-password",
+]

@@ -1,0 +1,26 @@
+[ml2]
+type_drivers = flat,vlan,vxlan,local
+tenant_network_types = vxlan,flat
+mechanism_drivers = linuxbridge,l2population
+
+[ml2_type_flat]
+flat_networks = vlan25,tempest
+
+[ml2_type_vxlan]
+vxlan_group = 224.0.0.1
+vni_ranges = 1:1000
+
+[agent]
+tunnel_types = vxlan
+vxlan_udp_port = 4789
+
+[linux_bridge]
+physical_interface_mappings = vlan25:eth11,tempest:eth13
+
+[l2pop]
+agent_boot_time = 180
+
+[securitygroup]
+enable_security_group = True
+enable_ipset = True
+firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver

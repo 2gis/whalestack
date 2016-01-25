@@ -1,0 +1,33 @@
+[ml2]
+type_drivers = flat,vlan,vxlan,local
+tenant_network_types = vxlan,flat
+mechanism_drivers = linuxbridge,l2population
+
+[ml2_type_flat]
+flat_networks = flat
+
+[ml2_type_vxlan]
+vxlan_group = 224.0.0.1
+vni_ranges = 1:1000
+
+[vxlan]
+enable_vxlan = True
+vxlan_group = 224.0.0.1
+local_ip = {{ getenv "NEUTRON_VXLAN_IP" }}
+l2_population = False
+
+[agent]
+tunnel_types = vxlan
+vxlan_udp_port = 4789
+
+[linux_bridge]
+physical_interface_mappings = flat:{{ getenv "NEUTRON_FLAT_IF" }}
+
+[l2pop]
+agent_boot_time = 180
+
+[securitygroup]
+enable_security_group = True
+enable_ipset = True
+firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
+

@@ -1,0 +1,12 @@
+[template]
+src = "heat.conf.tmpl"
+dest = "/etc/heat/heat.conf"
+keys = [
+    "/services/heat/config",
+    "/services/rabbitmq/hosts",
+    "/services/rabbitmq/config/userid",
+    "/services/rabbitmq/config/password",
+    "/services/balancer/host",
+    "/services/keystone/config/admin-token",
+]
+reload_cmd = "sv restart heat-engine"

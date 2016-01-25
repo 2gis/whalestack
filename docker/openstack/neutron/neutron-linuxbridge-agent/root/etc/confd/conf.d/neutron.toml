@@ -1,0 +1,11 @@
+[template]
+src = "neutron.conf.tmpl"
+dest = "/etc/neutron/neutron.conf"
+keys = [
+    "/services/rabbitmq/hosts",
+    "/services/rabbitmq/config",
+    "/services/router/frontend",
+    "/services/nova/config",
+    "/services/neutron/config"
+]
+reload_cmd="sv restart neutron-linuxbridge-agent"

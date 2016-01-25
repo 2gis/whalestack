@@ -1,0 +1,37 @@
+include vars.mk
+
+ifdef DISTR
+REPO_COMPONENT=$(DISTR)-$(COMPONENT)
+else
+REPO_COMPONENT=$(COMPONENT)
+endif
+
+ifdef IMAGE_PREFIX
+REPOSITORY=$(IMAGE_PREFIX)/$(REPO_COMPONENT)
+else
+REPOSITORY=$(REPO_COMPONENT)
+endif
+
+IMAGE=$(REPOSITORY):$(BUILD_TAG)
+
+dev-env:
+ifdef DEV_ENV
+	$(DEV_ENV)
+endif
+
+pull:
+	docker pull $(IMAGE)
+
+build:
+	docker build --rm -t $(IMAGE) .
+
+build-pull:
+	docker build --pull --rm -t $(IMAGE) .
+
+clean-containers:
+	docker rm -f $$(docker ps --all -f name=$(COMPONENT);status=exited)
+
+clean-images:
+	docker rmi -f $$(docker images -q $(IMAGE_PREFIX)/$(COMPONENT))
+
+clean-all: clean-containers clean-images

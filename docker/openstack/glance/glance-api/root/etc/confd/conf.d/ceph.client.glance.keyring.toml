@@ -1,0 +1,6 @@
+[template]
+src = "ceph.client.glance.keyring.tmpl"
+dest = "/etc/ceph/ceph.keyring"
+keys = [
+    "/services/ceph/config/glance-client"
+]

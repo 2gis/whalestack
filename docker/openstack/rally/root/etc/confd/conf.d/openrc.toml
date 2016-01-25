@@ -1,0 +1,9 @@
+[template]
+src = "openrc.sh.tmpl"
+dest = "/openrc.sh"
+keys = [
+    "/services/keystone/config/admin-token",
+    "/services/router/frontend/keystone/admin-url",
+    "/services/keystone/config/admin-password",
+    "/services/router/frontend/keystone/public-url",
+]

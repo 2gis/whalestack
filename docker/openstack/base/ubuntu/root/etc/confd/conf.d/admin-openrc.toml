@@ -1,0 +1,7 @@
+[template]
+src = "admin-openrc.sh.tmpl"
+dest = "/admin-openrc.sh"
+keys = [
+    "/services/keystone/config/admin-password",
+    "/services/balancer/host",
+]

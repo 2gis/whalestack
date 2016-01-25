@@ -1,0 +1,7 @@
+[template]
+src = "bootstrap-service.sh.tmpl"
+dest = "/bootstrap-service.sh"
+keys = [
+    "/services/cinder/config/service-password",
+    "/services/balancer/host",
+]

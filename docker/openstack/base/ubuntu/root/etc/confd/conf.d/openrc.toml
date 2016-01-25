@@ -1,0 +1,7 @@
+[template]
+src = "openrc.sh.tmpl"
+dest = "/openrc.sh"
+keys = [
+    "/services/keystone/config/admin-token",
+    "/services/balancer/host",
+]

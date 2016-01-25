@@ -1,0 +1,4 @@
+[template]
+src = "nova-compute.conf.tmpl"
+dest = "/etc/nova/nova-compute.conf"
+reload_cmd="sv restart nova-compute"

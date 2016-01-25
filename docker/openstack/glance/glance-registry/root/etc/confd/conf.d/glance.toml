@@ -1,0 +1,13 @@
+[template]
+src = "glance.conf.tmpl"
+dest = "/etc/glance/glance-registry.conf"
+keys = [
+    "/services/rabbitmq/hosts",
+    "/services/rabbitmq/config/userid",
+    "/services/rabbitmq/config/password",
+    "/services/rabbitmq/config/port",
+    "/services/balancer/host",
+    "/services/glance/config/",
+]
+
+reload_cmd="sv restart glance-registry"

@@ -1,0 +1,9 @@
+[template]
+src = "local_settings.py.tmpl"
+dest = "/etc/openstack-dashboard/local_settings.py"
+keys = [
+    "/services/balancer/host",
+    "/services/horizon/config",
+    "/services/memcached/url",
+]
+reload_cmd="/bin/bash /restart.sh"

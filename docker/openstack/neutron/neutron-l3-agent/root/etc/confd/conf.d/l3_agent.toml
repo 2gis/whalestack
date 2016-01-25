@@ -1,0 +1,6 @@
+[template]
+src = "l3_agent.ini.tmpl"
+dest = "/etc/neutron/l3_agent.ini"
+keys = [
+]
+reload_cmd = "sv restart neutron-l3-agent"

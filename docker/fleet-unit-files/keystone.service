@@ -1,0 +1,16 @@
+Description=Component keystone of service keystone
+
+[Service]
+TimeoutStartSec=20m
+EnvironmentFile=/etc/environment
+ExecStartPre=-/bin/sh -c "/usr/bin/docker stop keystone"
+ExecStartPre=-/bin/sh -c "/usr/bin/docker rm keystone"
+ExecStartPre=-/bin/sh -c "IMAGE=$(etcdctl get /services/keystone/config/keystone-image-name) && flock -w 1800 /run/docker-pull.lock /usr/bin/docker pull $IMAGE"
+ExecStart=/bin/sh -c "IMAGE=$(etcdctl get /services/keystone/config/keystone-image-name) && exec /usr/bin/docker run --rm --name keystone -e CONFD_OPTS='-interval 10 -node 172.17.42.1:4001' -e SERVICE_5000_NAME=services/router/backend/keystone/public -e SERVICE_35357_NAME=services/router/backend/keystone/admin -p 5000 -p 35357 $IMAGE"
+ExecStop=/bin/sh -c "/usr/bin/docker stop keystone"
+
+Restart=on-failure
+RestartSec=5
+
+[X-Fleet]
+Global=True

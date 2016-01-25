@@ -1,0 +1,6 @@
+[template]
+src = "ceph.client.cinder.keyring.tmpl"
+dest = "/etc/ceph/ceph.keyring"
+keys = [
+    "/services/ceph/config/cinder-client"
+]

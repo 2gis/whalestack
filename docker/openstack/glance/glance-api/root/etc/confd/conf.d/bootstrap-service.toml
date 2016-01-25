@@ -1,0 +1,7 @@
+[template]
+src = "bootstrap-service.sh.tmpl"
+dest = "/bootstrap-service.sh"
+keys = [
+    "/services/balancer/host",
+    "/services/glance/config"
+]

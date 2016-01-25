@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+
+BIN_PATH=/usr/local/sbin/haproxy
+CFG_PATH=/usr/local/etc/haproxy/haproxy.cfg
+PID_PATH=/var/run/haproxy.pid
+
+if [ ! -f $CFG_PATH ]; then
+    exit 1
+fi
+
+exec 2>&1
+exec /usr/bin/env bash <<EOF
+$BIN_PATH -f $CFG_PATH -p $PID_PATH
+
+# Handle parent
+trap "echo SIGHUP caught; $BIN_PATH -f $CFG_PATH -p $PID_PATH -sf \\\$(cat $PID_PATH)" SIGHUP
+trap "echo SIGTERM caught; kill -TERM \\\$(cat $PID_PATH) && exit 0" SIGTERM SIGINT
+
+# Handle child
+while true; do
+    PID=\$(cat $PID_PATH)
+    if ! kill -0 \$PID; then
+        echo "Process \$PID is dead"
+        exit 1
+    fi
+    sleep 1
+done
+EOF

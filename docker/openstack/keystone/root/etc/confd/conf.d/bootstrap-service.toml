@@ -1,0 +1,8 @@
+[template]
+src = "bootstrap-service.sh.tmpl"
+dest = "/bootstrap-service.sh"
+keys = [
+    "/services/keystone/config/admin-password",
+    "/services/keystone/config/service-password",
+    "/services/balancer/host",
+]

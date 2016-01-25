@@ -1,0 +1,14 @@
+[template]
+src = "cinder.conf.tmpl"
+dest = "/etc/cinder/cinder.conf"
+keys = [
+    "/services/cinder/config/",
+    "/services/rabbitmq/hosts",
+    "/services/rabbitmq/config/userid",
+    "/services/rabbitmq/config/password",
+    "/services/router/frontend/glance/api",
+    "/services/keystone/config/admin-token",
+    "/services/balancer/host",
+]
+
+reload_cmd="sv restart cinder-api"

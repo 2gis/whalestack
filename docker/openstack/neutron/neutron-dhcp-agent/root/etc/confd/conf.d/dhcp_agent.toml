@@ -1,0 +1,7 @@
+[template]
+src = "dhcp_agent.ini.tmpl"
+dest = "/etc/neutron/dhcp_agent.ini"
+keys = [
+    "/services/neutron/config"
+]
+reload_cmd="sv restart neutron-dhcp-agent"

@@ -1,0 +1,10 @@
+[template]
+src = "tempest.conf.tmpl"
+dest = "/etc/tempest/tempest.conf"
+keys = [
+    "/services/router/frontend/keystone/public-url",
+    "/services/neutron/config/keystone-password",
+    "/services/neutron/config/keystone-user",
+    "/services/nova/config/service-password",
+    "/services/tempest/config/",
+]

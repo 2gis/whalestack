@@ -1,0 +1,16 @@
+Description=Component libvirt of service libvirt
+
+[Service]
+TimeoutStartSec=20m
+EnvironmentFile=/etc/environment
+ExecStartPre=-/bin/sh -c "/usr/bin/docker stop libvirt"
+ExecStartPre=-/bin/sh -c "/usr/bin/docker rm libvirt"
+ExecStartPre=-/bin/sh -c "IMAGE=$(etcdctl get /services/libvirt/config/libvirt-image-name) && flock -w 1800 /run/docker-pull.lock /usr/bin/docker pull $IMAGE"
+ExecStart=/bin/sh -c "IMAGE=$(etcdctl get /services/libvirt/config/libvirt-image-name) && exec /usr/bin/docker run --rm --name libvirt --volume /var/lib/nova/images:/var/lib/nova/images:rw --volume /var/lib/nova/instances:/var/lib/nova/instances:rw --volume /var/run/libvirt:/var/run/libvirt:rw --privileged --net host --cap-add CAP_NET_ADMIN $IMAGE"
+ExecStop=/bin/sh -c "/usr/bin/docker stop libvirt"
+
+Restart=on-failure
+RestartSec=5
+
+[X-Fleet]
+Global=True

@@ -1,0 +1,11 @@
+[DEFAULT]
+debug = {{ getv "/services/neutron/config/debug" }}
+interface_driver = neutron.agent.linux.interface.BridgeInterfaceDriver
+dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
+use_namespaces = True
+enable_isolated_metadata = True
+enable_metadata_network = False
+dhcp_delete_namespaces = True
+num_sync_threads = 2
+dnsmasq_config_file = /etc/neutron/dnsmasq-neutron.conf
+dhcp_domain = openstacklocal

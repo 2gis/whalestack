@@ -1,0 +1,14 @@
+[template]
+src = "bootstrap-service.sh.tmpl"
+dest = "/bootstrap-service.sh"
+keys = [
+    "/services/router/frontend/heat/api-cfn",
+    "/services/heat/config/keystone-user",
+    "/services/heat/config/keystone-tenant",
+    "/services/heat/config/keystone-password",
+    "/services/heat/config/stack-domain-admin",
+    "/services/heat/config/stack-domain-admin-password",
+    "/services/heat/config/stack-user-domain-name",
+    "/services/keystone/config/admin-password",
+    "/services/balancer/host",
+]

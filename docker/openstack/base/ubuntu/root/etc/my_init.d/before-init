@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -e
+
+INIT_SCRIPT_PATH="/init.sh"
+if [[ -f "$INIT_SCRIPT_PATH" ]]; then
+    bash "$INIT_SCRIPT_PATH"
+fi
+
+BOOTSTRAP_SCRIPT_PATH="/bootstrap-service.sh"
+if [[ -f "$BOOTSTRAP_SCRIPT_PATH" ]]; then
+    bash "$BOOTSTRAP_SCRIPT_PATH"
+fi

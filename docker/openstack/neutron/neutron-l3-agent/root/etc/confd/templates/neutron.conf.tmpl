@@ -1,0 +1,85 @@
+[DEFAULT]
+debug = {{ getv "/services/neutron/config/debug" }}
+verbose = {{ getv "/services/neutron/config/verbose" }}
+lock_path = /var/lock/neutron
+log_file = /dev/stdout
+
+auth_strategy = keystone
+
+network_device_mtu = 1450
+
+## Schedulers
+router_distributed = False
+agent_down_time = 120
+network_scheduler_driver = neutron.scheduler.dhcp_agent_scheduler.ChanceScheduler
+router_scheduler_driver = neutron.scheduler.l3_agent_scheduler.LeastRoutersScheduler
+loadbalancer_pool_scheduler_driver = neutron.services.loadbalancer.agent_scheduler.ChanceScheduler
+network_auto_schedule = True
+router_auto_schedule = True
+
+## API
+bind_port = 9696
+bind_host = 0.0.0.0
+
+## Workers
+api_workers = 10
+rpc_workers = 0
+
+## Plugins
+allow_overlapping_ips = True
+core_plugin = neutron.plugins.ml2.plugin.Ml2Plugin
+service_plugins = neutron.services.l3_router.l3_router_plugin.L3RouterPlugin
+
+## MAC Address
+base_mac = fa:16:3e:00:00:00
+mac_generation_retries = 16
+
+## DHCP
+dhcp_agent_notification = True
+dhcp_agents_per_network = 2
+dhcp_delete_namespaces = True
+dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
+dhcp_lease_duration = 86400
+
+## RabbitMQ
+{{ $rabbit_hosts := getvs "/services/rabbitmq/hosts/*" }}
+rabbit_hosts = {{ join $rabbit_hosts "," }}
+rabbit_userid = {{ getv "/services/rabbitmq/config/userid" }}
+rabbit_password = {{ getv "/services/rabbitmq/config/password" }}
+rabbit_port = {{ getv "/services/rabbitmq/config/port" }}
+
+## Notifications
+notification_driver = neutron.openstack.common.notifier.rpc_notifier
+notify_nova_on_port_status_changes = True
+notify_nova_on_port_data_changes = True
+send_events_interval = 2
+
+## Nova
+nova_url = http://{{ getv "/services/router/frontend/nova-api/url" }}/v2/%(tenant_id)s
+nova_admin_username = nova
+nova_admin_tenant_id = {{ getv "/services/nova/config/keystone-tenant" }}
+nova_admin_password = {{ getv "/services/nova/config/service-password" }}
+nova_admin_auth_url = http://{{ getv "/services/router/frontend/keystone/public-url" }}/v2.0
+
+[quotas]
+quota_driver = neutron.db.quota_db.DbQuotaDriver
+quota_items = network,subnet,port
+
+[agent]
+polling_interval = 5
+report_interval = 60
+
+[keystone_authtoken]
+signing_dir = /var/cache/neutron
+auth_uri = http://{{ getv "/services/router/frontend/keystone/public-url" }}/v2.0
+identity_uri = http://{{ getv "/services/router/frontend/keystone/admin-url" }}
+admin_user = {{ getv "/services/neutron/config/keystone-user" }}
+admin_tenant_name = {{ getv "/services/neutron/config/keystone-tenant" }}
+admin_password = {{ getv "/services/neutron/config/keystone-password" }}
+
+[database]
+connection = {{ getv "/services/neutron/config/db-connection" }}
+
+[service_providers]
+service_provider = LOADBALANCER:Haproxy:neutron.services.loadbalancer.drivers.haproxy.plugin_driver.HaproxyOnHostPluginDriver:default
+service_provider = VPN:openswan:neutron.services.vpn.service_drivers.ipsec.IPsecVPNDriver:default

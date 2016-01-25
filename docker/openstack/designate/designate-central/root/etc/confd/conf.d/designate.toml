@@ -1,0 +1,11 @@
+[template]
+src = "designate.conf.tmpl"
+dest = "/etc/designate/designate.conf"
+keys = [
+    "/services/rabbitmq/hosts",
+    "/services/rabbitmq/config/userid",
+    "/services/rabbitmq/config/password",
+    "/services/rabbitmq/config/port",
+    "/services/designate/config/",
+]
+reload_cmd = "sv restart designate-central"

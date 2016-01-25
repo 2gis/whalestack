@@ -1,0 +1,51 @@
+[DEFAULT]
+verbose = {{ getv "/services/cinder/config/verbose" }}
+debug = {{ getv "/services/cinder/config/debug" }}
+auth_strategy=keystone
+
+rpc_backend = rabbit
+{{ $rabbit_hosts := getvs "/services/rabbitmq/hosts/*" }}
+rabbit_hosts = {{ join $rabbit_hosts "," }}
+rabbit_userid = {{ getv "/services/rabbitmq/config/userid" }}
+rabbit_password = {{ getv "/services/rabbitmq/config/password" }}
+
+#volumes_dir = /var/lib/cinder/volumes DELETE
+volume_clear = zero
+volume_clear_size = 0
+
+nova_catalog_info = compute:nova:internalURL
+nova_catalog_admin_info = compute:nova:adminURL
+
+{{ $glance_host := split (getv "/services/router/frontend/glance/api") ":" }}
+glance_host = {{ index $glance_host 0 }}
+glance_port = {{ index $glance_host 1 }}
+glance_num_retries = 2
+glance_api_servers = {{ getv "/services/router/frontend/glance/api" }}
+
+storage_availability_zone = nova
+default_availability_zone = nova
+
+default_volume_type = rbd
+
+iscsi_helper = tgtadm
+iscsi_iotype = fileio
+#my_ip = 192.168.123.173
+#set_parameter DEFAULT iscsi_ip_address $my_ip
+iscsi_num_targets = 100
+iscsi_port = 3260
+
+control_exchange = cinder
+notification_driver = messagingv2
+
+volume_name_template = volume-%s
+
+[database]
+connection = {{ getv "/services/cinder/config/db-connection" }}
+
+[keystone_authtoken]
+signing_dir = /var/cache/cinder
+identity_uri = http://{{ getv "/services/balancer/host" }}:35357
+auth_uri = http://{{ getv "/services/balancer/host" }}:5000/v2.0
+admin_tenant_name = {{ getv "/services/cinder/config/keystone-tenant" }}
+admin_user = {{ getv "/services/cinder/config/keystone-user" }}
+admin_password = {{ getv "/services/cinder/config/keystone-password" }}

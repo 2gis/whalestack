@@ -1,0 +1,16 @@
+Description=Component nova-compute of service nova
+
+[Service]
+TimeoutStartSec=20m
+EnvironmentFile=/etc/environment
+ExecStartPre=-/bin/sh -c "/usr/bin/docker stop nova-compute"
+ExecStartPre=-/bin/sh -c "/usr/bin/docker rm nova-compute"
+ExecStartPre=-/bin/sh -c "IMAGE=$(etcdctl get /services/nova/config/nova-compute-image-name) && flock -w 1800 /run/docker-pull.lock /usr/bin/docker pull $IMAGE"
+ExecStart=/bin/sh -c "IMAGE=$(etcdctl get /services/nova/config/nova-compute-image-name) && exec /usr/bin/docker run --rm --name nova-compute -e CONFD_OPTS='-interval 10 -node 172.17.42.1:4001' --volume /var/lib/nova/images:/var/lib/nova/images:rw --volume /var/lib/nova/instances:/var/lib/nova/instances:rw  --volume /var/run/libvirt:/var/run/libvirt:rw  --env NOVA_MY_IP=$COREOS_PUBLIC_IPV4  --env NOVA_VIRT_TYPE=qemu  --privileged  --net host  --cap-add CAP_NET_ADMIN $IMAGE"
+ExecStop=/bin/sh -c "/usr/bin/docker stop nova-compute"
+
+Restart=on-failure
+RestartSec=5
+
+[X-Fleet]
+Global=True

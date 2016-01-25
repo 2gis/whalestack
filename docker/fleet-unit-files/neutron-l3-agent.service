@@ -1,0 +1,16 @@
+Description=Component neutron-l3-agent of service neutron
+
+[Service]
+TimeoutStartSec=20m
+EnvironmentFile=/etc/environment
+ExecStartPre=-/bin/sh -c "/usr/bin/docker stop neutron-l3-agent"
+ExecStartPre=-/bin/sh -c "/usr/bin/docker rm neutron-l3-agent"
+ExecStartPre=-/bin/sh -c "IMAGE=$(etcdctl get /services/neutron/config/neutron-l3-agent-image-name) && flock -w 1800 /run/docker-pull.lock /usr/bin/docker pull $IMAGE"
+ExecStart=/bin/sh -c "IMAGE=$(etcdctl get /services/neutron/config/neutron-l3-agent-image-name) && exec /usr/bin/docker run --rm --name neutron-l3-agent -e CONFD_OPTS='-interval 10 -node 172.17.42.1:4001' --privileged --net host --cap-add CAP_NET_ADMIN $IMAGE"
+ExecStop=/bin/sh -c "/usr/bin/docker stop neutron-l3-agent"
+
+Restart=on-failure
+RestartSec=5
+
+[X-Fleet]
+Global=True

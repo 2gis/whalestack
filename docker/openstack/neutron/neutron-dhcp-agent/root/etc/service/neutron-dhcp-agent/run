@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+exec /usr/bin/neutron-dhcp-agent --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/dhcp_agent.ini

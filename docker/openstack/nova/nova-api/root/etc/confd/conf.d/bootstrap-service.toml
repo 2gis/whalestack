@@ -1,0 +1,8 @@
+[template]
+src = "bootstrap-service.sh.tmpl"
+dest = "/bootstrap-service.sh"
+keys = [
+    "/services/router/frontend/nova-api/url",
+    "/services/nova/config/service-password",
+    "/services/balancer/host",
+]

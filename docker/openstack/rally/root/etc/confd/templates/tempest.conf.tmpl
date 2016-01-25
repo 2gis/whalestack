@@ -1,0 +1,76 @@
+[DEFAULT]
+debug = {{ getv "/services/tempest/config/debug" }}
+verbose = {{ getv "/services/tempest/config/verbose" }}
+
+log_file = /dev/stdout
+use_stderr = False
+
+[cli]
+cli_dir = /usr/local/bin
+
+[compute]
+ssh_connect_method = floating
+use_block_migration_for_live_migration = False
+live_migration_available = False
+image_alt_ssh_user = cirros
+image_ssh_user = cirros
+ssh_timeout = 196
+ip_version_for_ssh = 4
+network_for_ssh = private
+ssh_user = cirros
+allow_tenant_isolation = False
+change_password_available = False
+build_interval = 1
+build_timeout = 196
+flavor_ref = 201
+flavor_ref_alt = 202
+#image_ref = 32bb6583-cf53-4083-8a70-7443035c3cee
+#image_ref_alt = d236977b-7a50-466e-ae58-b89cda6d65ee
+
+[compute-admin]
+username = nova
+password = {{ getv "/services/nova/config/service-password" }}
+tenant_name = admin
+
+[identity]
+username = {{ getv "/services/neutron/config/keystone-user" }}
+password = {{ getv "/services/neutron/config/keystone-password" }}
+tenant_name = admin
+alt_username = {{ getv "/services/neutron/config/keystone-user" }}
+alt_password = {{ getv "/services/neutron/config/keystone-password" }}
+alt_tenant_name = admin
+admin_username = admin
+admin_password = {{ getv "/services/neutron/config/keystone-password" }}
+admin_tenant_name = admin
+uri = http://{{ getv "/services/router/frontend/keystone/public-url" }}/v2.0
+uri_v3 = http://{{ getv "/services/router/frontend/keystone/public-url" }}/v3
+admin_domain_name = Default
+
+[network]
+default_network = 10.0.0.0/24
+tenant_networks_reachable = false
+api_version = 2.0
+#public_network_id = 9c815dd4-77b0-449a-a7de-60d5c9d283f9
+#public_router_id = 006938f0-fbb6-4403-92d9-156879e02c7d
+
+[network-feature-enabled]
+api_extensions = all
+ipv6 = False
+
+[scenario]
+large_ops_number = 0
+
+[service_available]
+neutron = False
+heat = False
+ceilometer = False
+swift = False
+cinder = False
+nova = False
+glance = False
+horizon = False
+
+[volume]
+build_interval = 1
+build_timeout = 196
+
